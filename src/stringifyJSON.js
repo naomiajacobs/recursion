@@ -7,7 +7,7 @@ var stringifyJSON = function(obj) {
   
   var type = typeof obj;
 
-  //
+  //type defaults
   if (type === 'number' || type === 'boolean') {
     return obj.toString();
   }
@@ -20,16 +20,52 @@ var stringifyJSON = function(obj) {
     return '"' + obj + '"';
   }
 
+  //array syntax
   else if (Array.isArray(obj)) {
-    var stringified = '[';
-    for (var i = 0; i < obj.length; i++) {
-      stringified += stringifyJSON(obj[i]);
-      if (i < obj.length-1) {
-        stringified += ',';
+
+    var arrayStringified = '[';
+
+    //stringify each item in array
+    _.each(obj, function(item, key) {
+      arrayStringified += stringifyJSON(item);
+      if (key < obj.length-1) {
+        arrayStringified += ',';
       }
-    }
-    stringified += ']';
-    return stringified;
+    });
+
+    arrayStringified += ']';
+
+    return arrayStringified;
+  }
+
+
+  //object syntax
+  else if (type === 'object') {
+    var count = 0;
+
+    var objStringified = '{';
+
+    //stringify each property in object
+    _.each(obj, function(item, key) {
+
+      //don't include if undefined or a function
+      if (item === undefined || typeof item === 'function') {
+        return;
+
+      } else {
+
+        objStringified += stringifyJSON(key) + ':' + stringifyJSON(item);
+        count++;
+        if (count !== _.size(obj)) {
+          objStringified += ',';
+        }
+      }
+      
+    });
+
+    objStringified += '}';
+
+    return objStringified;
   }
 
 };
