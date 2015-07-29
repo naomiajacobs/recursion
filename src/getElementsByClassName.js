@@ -11,20 +11,21 @@ var getElementsByClassName = function(className) {
 
   var hasClass = function(elem) {
 
-    //only run if the child is an element node
+    //only runs if the child is an element node
     if (elem.nodeType === 1) {
 
       //add element to list if it has the class
       if (elem.classList.contains(className)) {
         yesHasClass.push(elem);
-        alert(elem);
       }
 
       //if element has children, run hasClass on each of its children
-      if (elem.childNodes.length) {
-        for (var i = 0; i < elem.childNodes.length; i++) {
-          hasClass(elem.childNodes[i]);
-        }
+      if (elem.hasChildNodes()) {
+
+        _.each(elem.childNodes, function(el) {
+          
+          hasClass(el);
+        });
       }
     }
   };
